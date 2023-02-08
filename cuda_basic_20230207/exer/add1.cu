@@ -7,6 +7,7 @@ const double b = 2.34;
 const double c = 3.57;
 void __global__ add(const double *x, const double *y, double *z);
 void check(const double *z, const int N);
+double __device__ add_device(const double x, const double y);
 
 int main(void){
     const int N = 100000000;
@@ -47,7 +48,8 @@ int main(void){
 
 void __global__ add(const double *x, const double *y, double *z){
     const int n = blockDim.x * blockIdx.x + threadIdx.x;
-    z[n] = x[n] + y[n];
+    // z[n] = x[n] + y[n];
+    z[n] = add_device(x[n], y[n]);
 }
 
 void check(const double *z, const int N){
@@ -58,4 +60,8 @@ void check(const double *z, const int N){
         }
     }
     printf("%s\n", has_error ? "Has errors" : "No errors");
+}
+
+double __device__ add_device(const double x, const double y){
+    return (x+y);
 }
